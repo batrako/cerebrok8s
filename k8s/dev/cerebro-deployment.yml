@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cerebro-deployment
+  labels:
+    app: cerebro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cerebro
+  template:
+    metadata:
+      labels:
+        app: cerebro
+    spec:
+      containers:
+      - name: cerebro
+        image: batrako/cerebro:0.8.1
+        env:
+          - name: USER
+            valueFrom:
+              secretKeyRef:
+                name: user
+                key: user 
+          - name: PASS
+            valueFrom:
+              secretKeyRef:
+                name: pass
+                key: pass
+        volumeMounts:
+          - name: config-volume
+            mountPath: /opt/cerebro/conf/hosts.conf
+            subPath: hosts.conf
+        ports:
+        - containerPort: 9000
+      volumes:
+      - name: config-volume
+        configMap:
+          name: cerebro-config

@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cerebro-svc
+spec:
+  selector:
+    app: cerebro
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9000
+  type: NodePort
